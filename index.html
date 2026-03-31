@@ -147,6 +147,35 @@ button { font-family: 'Poppins', sans-serif; }
 .btn.loading .btn-text { opacity: 0.8; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* ===== LANGUAGE TOGGLE ===== */
+.lang-toggle {
+  display: flex; align-items: center; gap: 4px;
+  background: var(--gold-pale); border-radius: 100px;
+  padding: 4px; border: 1px solid var(--border);
+}
+.lang-btn {
+  padding: 5px 14px; border: none; border-radius: 100px;
+  background: transparent; cursor: pointer;
+  font-family: 'Poppins', sans-serif; font-size: 0.75rem;
+  font-weight: 600; color: var(--text-light);
+  transition: var(--transition); white-space: nowrap;
+}
+.lang-btn.active {
+  background: var(--gold); color: var(--white);
+  box-shadow: 0 2px 8px rgba(200,155,60,0.35);
+}
+.lang-btn:hover:not(.active) { color: var(--gold); }
+.lang-ta { display: none; }
+.lang-en { display: inline; }
+body.tamil .lang-ta { display: inline; }
+body.tamil .lang-en { display: none; }
+/* block-level elements that need to swap */
+.lang-ta-block { display: none; }
+.lang-en-block { display: block; }
+body.tamil .lang-ta-block { display: block; }
+body.tamil .lang-en-block { display: none; }
+
+
 /* ===== TOAST NOTIFICATIONS ===== */
 #toast-container {
   position: fixed; bottom: 24px; right: 24px; z-index: 9999;
@@ -842,7 +871,7 @@ button { font-family: 'Poppins', sans-serif; }
     <div class="modal-header">
       <div class="modal-header-top">
         <div>
-          <div class="modal-title" id="clientModalTitle">Start Planning ✨</div>
+          <div class="modal-title" id="clientModalTitle"><span class="lang-en">Start Planning ✨</span><span class="lang-ta">Plan Pannunga ✨</span></div>
           <div class="modal-sub">Tell us about your event and we'll connect you with the best vendors</div>
         </div>
         <button class="modal-close" onclick="closeModal('clientModal')" aria-label="Close">&times;</button>
@@ -944,7 +973,7 @@ button { font-family: 'Poppins', sans-serif; }
     <div class="modal-header">
       <div class="modal-header-top">
         <div>
-          <div class="modal-title" id="vendorModalTitle">Join as a Vendor 🏪</div>
+          <div class="modal-title" id="vendorModalTitle"><span class="lang-en">Join as a Vendor 🏪</span><span class="lang-ta">Vendor-aa Serunga 🏪</span></div>
           <div class="modal-sub">Grow your business and connect with clients across Tamil Nadu</div>
         </div>
         <button class="modal-close" onclick="closeModal('vendorModal')" aria-label="Close">&times;</button>
@@ -994,15 +1023,22 @@ button { font-family: 'Poppins', sans-serif; }
             <label class="form-label" for="v_category">Service Category <span>*</span></label>
             <select id="v_category" name="category" class="form-select" required>
               <option value="">Select your service</option>
+              <option>Wedding Planning & Coordination</option>
               <option>Photography & Videography</option>
-              <option>Catering Services</option>
+              <option>Bridal & Groom Styling</option>
               <option>Decoration & Flowers</option>
+              <option>Catering Services</option>
               <option>Entertainment & Music</option>
-              <option>Venue / Banquet Hall</option>
-              <option>Bridal Makeup & Beauty</option>
-              <option>Mehendi Artist</option>
-              <option>DJ & Sound Systems</option>
-              <option>Wedding Cards & Printing</option>
+              <option>Venue & Hospitality</option>
+              <option>Invitations & Printing</option>
+              <option>Transport & Logistics</option>
+              <option>Return Gifts & Stalls</option>
+              <option>Honeymoon & Travel</option>
+              <option>Content Creation</option>
+              <option>Event Tech</option>
+              <option>Workshops</option>
+              <option>Shopping & Styling</option>
+              <option>Celebrity Services</option>
               <option>Other</option>
             </select>
             <div class="field-error" id="v_category_err">Please select a service category</div>
@@ -1052,6 +1088,30 @@ button { font-family: 'Poppins', sans-serif; }
             <div class="field-error" id="v_priceRange_err">Please select a price range</div>
           </div>
         </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="v_instagram">Instagram Handle</label>
+            <input type="text" id="v_instagram" name="instagram" class="form-input" placeholder="@yourhandle">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="v_type">Business Type</label>
+            <select id="v_type" name="businessType" class="form-select">
+              <option value="">Select type</option>
+              <option>Freelancer</option>
+              <option>Studio</option>
+              <option>Company</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="v_area">Service Area</label>
+          <select id="v_area" name="serviceArea" class="form-select">
+            <option value="">Select service area</option>
+            <option>Within City Only</option>
+            <option>Across District</option>
+            <option>Across Tamil Nadu</option>
+          </select>
+        </div>
         <button type="submit" class="btn btn-primary btn-full" id="vendorSubmitBtn">
           <span class="btn-spinner"></span>
           <span class="btn-text">🚀 Register My Business</span>
@@ -1075,8 +1135,15 @@ button { font-family: 'Poppins', sans-serif; }
       <li><a href="#vendors">Vendors</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
-    <div class="nav-cta">
-      <button class="btn btn-primary" onclick="openModal('clientModal')">Get Started</button>
+    <div class="nav-cta" style="display:flex;align-items:center;gap:12px;">
+      <div class="lang-toggle" role="group" aria-label="Language selector">
+        <button class="lang-btn active" id="btn-en" onclick="setLanguage('en')" aria-pressed="true">EN</button>
+        <button class="lang-btn" id="btn-ta" onclick="setLanguage('ta')" aria-pressed="false">தமிழ்</button>
+      </div>
+      <button class="btn btn-primary" onclick="openModal('clientModal')">
+        <span class="lang-en">Get Started</span>
+        <span class="lang-ta">தொடங்குங்கள்</span>
+      </button>
     </div>
     <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-expanded="false" aria-controls="mobileMenu" aria-label="Toggle menu">
       <span></span><span></span><span></span>
@@ -1105,30 +1172,36 @@ button { font-family: 'Poppins', sans-serif; }
       <div class="hero-content">
         <div class="hero-badge">
           <div class="hero-badge-dot" aria-hidden="true"></div>
-          Now in Tamil Nadu — Your Celebration, Our Mission
+          <span class="lang-en">Now in Tamil Nadu — Your Celebration, Our Mission</span><span class="lang-ta">Tamil Nadu-vil — Ungal Vizha, Engal Kadan 🌸</span>
         </div>
         <h1 class="hero-headline">
-          Plan Your<br><span class="accent">Dream Event</span><br>Without Stress
+          <span class="lang-en-block">Plan Your<br><span class="accent">Dream Event</span><br>Without Stress</span><span class="lang-ta-block">Ungal <span class="accent">Vizhavin Kanavu</span><br>Innam Easy-ah Plan pannunga</span>
         </h1>
         <p class="hero-sub">
-          Weddings, birthdays & celebrations — discover verified vendors, compare prices, and manage everything in one beautiful place.
+          <span class="lang-en">Weddings, birthdays &amp; celebrations — discover verified vendors, compare prices, and manage everything in one beautiful place.</span><span class="lang-ta">Wedding, Birthday, Engagement — verified vendors ellaam oru idathula. Easy compare, simple book pannunga. 🎊</span>
         </p>
         <div class="hero-actions">
-          <button class="btn btn-primary" onclick="openModal('clientModal')">✨ Start Planning</button>
-          <button class="btn btn-secondary" onclick="openModal('vendorModal')">Become a Vendor →</button>
+          <button class="btn btn-primary" onclick="openModal('clientModal')">
+            <span class="lang-en">✨ Start Planning</span>
+            <span class="lang-ta">✨ Plan pannunga</span>
+          </button>
+          <button class="btn btn-secondary" onclick="openModal('vendorModal')">
+            <span class="lang-en">Become a Vendor →</span>
+            <span class="lang-ta">Vendor-ah Join pannunga →</span>
+          </button>
         </div>
         <div class="hero-stats" aria-label="Platform statistics">
           <div class="hero-stat">
             <div class="hero-stat-num">500+</div>
-            <div class="hero-stat-label">Verified Vendors</div>
+            <div class="hero-stat-label"><span class="lang-en">Verified Vendors</span><span class="lang-ta">Verified Vendors</span></div>
           </div>
           <div class="hero-stat">
             <div class="hero-stat-num">1,200+</div>
-            <div class="hero-stat-label">Happy Families</div>
+            <div class="hero-stat-label"><span class="lang-en">Happy Families</span><span class="lang-ta">Santosha Kudumbangal</span></div>
           </div>
           <div class="hero-stat">
             <div class="hero-stat-num">20+</div>
-            <div class="hero-stat-label">Event Categories</div>
+            <div class="hero-stat-label"><span class="lang-en">Event Categories</span><span class="lang-ta">Event Vagaigal</span></div>
           </div>
         </div>
       </div>
@@ -1174,30 +1247,30 @@ button { font-family: 'Poppins', sans-serif; }
   <div class="container">
     <div class="text-center reveal">
       <div class="kolam-deco"><div class="kolam-line"></div><div class="kolam-dot">✦</div><div class="kolam-line"></div></div>
-      <div class="section-tag">The Problem</div>
-      <h2 class="section-title">Why Event Planning<br>is Stressful?</h2>
-      <p class="section-sub">We know the pain — juggling calls, spreadsheets, and strangers. There's a better way.</p>
+      <div class="section-tag"><span class="lang-en">The Problem</span><span class="lang-ta">Pirivu</span></div>
+      <h2 class="section-title"><span class="lang-en">Why Event Planning<br>is Stressful?</span><span class="lang-ta">Event Plan panna<br>Yen Kashtama iruku? 😓</span></h2>
+      <p class="section-sub"><span class="lang-en">We know the pain — juggling calls, spreadsheets, and strangers. There's a better way.</span><span class="lang-ta">Ungal kashtam puriyum — romba phone calls, yaar믿믿믿a nu therila. Oru better way iruku.</span></p>
     </div>
     <div class="cards-grid">
       <div class="problem-card reveal reveal-delay-1">
         <div class="card-icon">😵</div>
-        <div class="card-title">Too Many Vendors to Manage</div>
-        <div class="card-desc">Calling 20 vendors, comparing notes on paper — it's exhausting and easy to miss details.</div>
+        <div class="card-title"><span class="lang-en">Too Many Vendors to Manage</span><span class="lang-ta">Romba Vendors — Manage panna kashtam</span></div>
+        <div class="card-desc"><span class="lang-en">Calling 20 vendors, comparing notes on paper — it's exhausting and easy to miss details.</span><span class="lang-ta">20 vendors-ku phone panni, paper-la note ezhuthi — time waste, stress adhigam.</span></div>
       </div>
       <div class="problem-card reveal reveal-delay-2">
         <div class="card-icon">🙈</div>
-        <div class="card-title">No Price Transparency</div>
-        <div class="card-desc">Hidden costs and vague quotes leave you guessing until the last moment.</div>
+        <div class="card-title"><span class="lang-en">No Price Transparency</span><span class="lang-ta">Price clarity illai 💸</span></div>
+        <div class="card-desc"><span class="lang-en">Hidden costs and vague quotes leave you guessing until the last moment.</span><span class="lang-ta">Hidden costs, vague quotes — kadaisi neram varai pottukittu iruppanga.</span></div>
       </div>
       <div class="problem-card reveal reveal-delay-3">
         <div class="card-icon">🤔</div>
-        <div class="card-title">Hard to Trust Vendors</div>
-        <div class="card-desc">No reviews, no verification — how do you know who's reliable for your big day?</div>
+        <div class="card-title"><span class="lang-en">Hard to Trust Vendors</span><span class="lang-ta">Yaarai믿믿믿믈 nu therila 😕</span></div>
+        <div class="card-desc"><span class="lang-en">No reviews, no verification — how do you know who's reliable for your big day?</span><span class="lang-ta">Reviews illai, verification illai — ungal big day-ku yaar reliable nu eppadi theriyum?</span></div>
       </div>
       <div class="problem-card reveal reveal-delay-4">
         <div class="card-icon">⏰</div>
-        <div class="card-title">Time-Consuming Process</div>
-        <div class="card-desc">Weeks of research when you should be enjoying the journey to your celebration.</div>
+        <div class="card-title"><span class="lang-en">Time-Consuming Process</span><span class="lang-ta">Time romba waste ⏳</span></div>
+        <div class="card-desc"><span class="lang-en">Weeks of research when you should be enjoying the journey to your celebration.</span><span class="lang-ta">Vizha vandhurum, research pannindey iruppom — anubhavikka neram illai.</span></div>
       </div>
     </div>
   </div>
@@ -1208,37 +1281,37 @@ button { font-family: 'Poppins', sans-serif; }
   <div class="container">
     <div class="text-center reveal">
       <div class="kolam-deco"><div class="kolam-line"></div><div class="kolam-dot">✦</div><div class="kolam-line"></div></div>
-      <div class="section-tag">Our Solution</div>
-      <h2 class="section-title">We Make Event Planning<br>Simple &amp; Joyful</h2>
-      <p class="section-sub">Everything you need — in one trusted platform built for Tamil Nadu families.</p>
+      <div class="section-tag"><span class="lang-en">Our Solution</span><span class="lang-ta">Engal Theervu</span></div>
+      <h2 class="section-title"><span class="lang-en">We Make Event Planning<br>Simple &amp; Joyful</span><span class="lang-ta">Namba Vizha — Ungal<br>Vizhavinai Easy pannurom ✨</span></h2>
+      <p class="section-sub"><span class="lang-en">Everything you need — in one trusted platform built for Tamil Nadu families.</span><span class="lang-ta">Ungalukku thevaiyanathu ellaam — Tamil Nadu kudumbangalukkaaga kattapadda oru platform-il.</span></p>
     </div>
     <div class="solution-grid">
       <div class="solution-card reveal reveal-delay-1">
         <div class="solution-icon">✅</div>
         <div class="solution-content">
-          <h3>Discover Verified Vendors</h3>
-          <p>Every vendor is background-checked and reviewed by real customers. Trust with confidence.</p>
+          <h3><span class="lang-en">Discover Verified Vendors</span><span class="lang-ta">Verified Vendors Kidaikkum ✅</span></h3>
+          <p><span class="lang-en">Every vendor is background-checked and reviewed by real customers. Trust with confidence.</span><span class="lang-ta">Oru oru vendor-um check pannappatta, real customers-aa review pannathu. Confidence-aa믿믿믿믈 mudiyum.</span></p>
         </div>
       </div>
       <div class="solution-card reveal reveal-delay-2">
         <div class="solution-icon">💰</div>
         <div class="solution-content">
-          <h3>Compare Pricing Easily</h3>
-          <p>See transparent packages side-by-side. No hidden costs, no surprises — just clear choices.</p>
+          <h3><span class="lang-en">Compare Pricing Easily</span><span class="lang-ta">Easy-ah Compare pannalam 🔍</span></h3>
+          <p><span class="lang-en">See transparent packages side-by-side. No hidden costs, no surprises — just clear choices.</span><span class="lang-ta">Transparent prices side-by-side. Hidden costs illai, surprises illai — clear choice mattum.</span></p>
         </div>
       </div>
       <div class="solution-card reveal reveal-delay-3">
         <div class="solution-icon">🔖</div>
         <div class="solution-content">
-          <h3>Book Without Hassle</h3>
-          <p>One-click booking, secure payments, and instant confirmation. Done in minutes.</p>
+          <h3><span class="lang-en">Book Without Hassle</span><span class="lang-ta">Simple-ah Book pannunga ⚡</span></h3>
+          <p><span class="lang-en">One-click booking, secure payments, and instant confirmation. Done in minutes.</span><span class="lang-ta">One-click booking, secure payment, instant confirmation. Sila nimidangalil mudiyum.</span></p>
         </div>
       </div>
       <div class="solution-card reveal reveal-delay-4">
         <div class="solution-icon">📊</div>
         <div class="solution-content">
-          <h3>Manage in One Dashboard</h3>
-          <p>Track every booking, payment, and vendor — your entire event from a single screen.</p>
+          <h3><span class="lang-en">Manage in One Dashboard</span><span class="lang-ta">Ellaam Oru Idathula 📱</span></h3>
+          <p><span class="lang-en">Track every booking, payment, and vendor — your entire event from a single screen.</span><span class="lang-ta">Oru screen-layey ellaa bookings, payments, vendors-aiyum track pannunga.</span></p>
         </div>
       </div>
     </div>
@@ -1285,25 +1358,25 @@ button { font-family: 'Poppins', sans-serif; }
   <div class="container">
     <div class="text-center reveal">
       <div class="kolam-deco"><div class="kolam-line"></div><div class="kolam-dot">✦</div><div class="kolam-line"></div></div>
-      <div class="section-tag">Process</div>
-      <h2 class="section-title">How Namba Vizha Works</h2>
-      <p class="section-sub">Three simple steps to your perfect celebration.</p>
+      <div class="section-tag"><span class="lang-en">Process</span><span class="lang-ta">Eppadi Seyvadhu</span></div>
+      <h2 class="section-title"><span class="lang-en">How Namba Vizha Works</span><span class="lang-ta">Namba Vizha Eppadi Work Agum?</span></h2>
+      <p class="section-sub"><span class="lang-en">Three simple steps to your perfect celebration.</span><span class="lang-ta">Ungal perfect celebration-ku moondru simple steps.</span></p>
     </div>
     <div class="steps-row">
       <div class="step reveal reveal-delay-1">
         <div class="step-number"><div class="step-num-inner">1</div><div class="step-emoji">🎉</div></div>
-        <h3>Choose Your Event</h3>
-        <p>Tell us about your celebration — wedding, birthday, engagement, or any family function. Set your date and budget.</p>
+        <h3><span class="lang-en">Choose Your Event</span><span class="lang-ta">Event Select pannunga</span></h3>
+        <p><span class="lang-en">Tell us about your celebration — wedding, birthday, engagement, or any family family function. Set your date and budget.</span><span class="lang-ta">Ungal vizha pathi sollunga — Wedding, Birthday, Engagement, Kuthu vilakku. Date and budget set pannunga.</span></p>
       </div>
       <div class="step reveal reveal-delay-2">
         <div class="step-number"><div class="step-num-inner">2</div><div class="step-emoji">🔍</div></div>
-        <h3>Browse &amp; Compare Vendors</h3>
-        <p>Explore verified vendors with real reviews, transparent pricing, and portfolio galleries. Compare side by side.</p>
+        <h3><span class="lang-en">Browse &amp; Compare Vendors</span><span class="lang-ta">Vendors Browse &amp; Compare pannunga</span></h3>
+        <p><span class="lang-en">Explore verified vendors with real reviews, transparent pricing, and portfolio galleries. Compare side by side.</span><span class="lang-ta">Real reviews, transparent pricing kooda verified vendors-ai browse pannunga. Side by side compare pannunga.</span></p>
       </div>
       <div class="step reveal reveal-delay-3">
         <div class="step-number"><div class="step-num-inner">3</div><div class="step-emoji">✨</div></div>
-        <h3>Book &amp; Manage Easily</h3>
-        <p>Confirm bookings, make secure payments, and track everything from your dashboard. Relax and celebrate!</p>
+        <h3><span class="lang-en">Book &amp; Manage Easily</span><span class="lang-ta">Easy-ah Book pannunga</span></h3>
+        <p><span class="lang-en">Confirm bookings, make secure payments, and track everything from your dashboard. Relax and celebrate!</span><span class="lang-ta">Bookings confirm pannunga, secure payments, dashboard-la track pannunga. Relax-aa celebrate pannunga! 🎉</span></p>
       </div>
     </div>
   </div>
@@ -1314,30 +1387,30 @@ button { font-family: 'Poppins', sans-serif; }
   <div class="container">
     <div class="text-center reveal">
       <div class="kolam-deco"><div class="kolam-line"></div><div class="kolam-dot">✦</div><div class="kolam-line"></div></div>
-      <div class="section-tag">Trust &amp; Safety</div>
-      <h2 class="section-title">Why Families Trust<br>Namba Vizha</h2>
-      <p class="section-sub">We built a platform where trust comes first — so your family can celebrate with peace of mind.</p>
+      <div class="section-tag"><span class="lang-en">Trust &amp; Safety</span><span class="lang-ta">Nambikkai &amp; Paathukaappu</span></div>
+      <h2 class="section-title"><span class="lang-en">Why Families Trust<br>Namba Vizha</span><span class="lang-ta">Yen Kudumbangal<br>Namba Vizhaai Nambugirargal?</span></h2>
+      <p class="section-sub"><span class="lang-en">We built a platform where trust comes first — so your family can celebrate with peace of mind.</span><span class="lang-ta">Nambikkai munnaal varum — ungal kudumbam manaaramai celebrate panna oru platform kattinoom.</span></p>
     </div>
     <div class="trust-grid">
       <div class="trust-card reveal reveal-delay-1">
         <div class="trust-icon">🛡️</div>
-        <div class="trust-title">Verified Vendors Only</div>
-        <div class="trust-desc">Every vendor passes our verification process. No fakes, no fraud.</div>
+        <div class="trust-title"><span class="lang-en">Verified Vendors Only</span><span class="lang-ta">Verified Vendors Mattum ✔️</span></div>
+        <div class="trust-desc"><span class="lang-en">Every vendor passes our verification process. No fakes, no fraud.</span><span class="lang-ta">Oru oru vendor-um verification process pass aganum. Fake illai, fraud illai.</span></div>
       </div>
       <div class="trust-card reveal reveal-delay-2">
         <div class="trust-icon">🔒</div>
-        <div class="trust-title">Secure Payments</div>
-        <div class="trust-desc">Bank-grade encryption. Your money is safe until the job is done.</div>
+        <div class="trust-title"><span class="lang-en">Secure Payments</span><span class="lang-ta">Secure Payments 💳</span></div>
+        <div class="trust-desc"><span class="lang-en">Bank-grade encryption. Your money is safe until the job is done.</span><span class="lang-ta">Bank-grade encryption. Velai mudiyum varai ungal paanam safe-aa irukum.</span></div>
       </div>
       <div class="trust-card reveal reveal-delay-3">
         <div class="trust-icon">⭐</div>
-        <div class="trust-title">Real Customer Reviews</div>
-        <div class="trust-desc">Authentic reviews from Tamil Nadu families — never paid or fabricated.</div>
+        <div class="trust-title"><span class="lang-en">Real Customer Reviews</span><span class="lang-ta">Unmaiyaana Reviews ⭐</span></div>
+        <div class="trust-desc"><span class="lang-en">Authentic reviews from Tamil Nadu families — never paid or fabricated.</span><span class="lang-ta">Tamil Nadu kudumbangalindru unmaiyaana reviews — pay panna illai, fake illai.</span></div>
       </div>
       <div class="trust-card reveal reveal-delay-4">
         <div class="trust-icon">🤝</div>
-        <div class="trust-title">Local Trusted Network</div>
-        <div class="trust-desc">Deep roots in Tamil Nadu communities. We know the culture, we respect your traditions.</div>
+        <div class="trust-title"><span class="lang-en">Local Trusted Network</span><span class="lang-ta">Urimai Network 🤝</span></div>
+        <div class="trust-desc"><span class="lang-en">Deep roots in Tamil Nadu communities. We know the culture, we respect your traditions.</span><span class="lang-ta">Tamil Nadu samooha vaerudal. Nraattu panbugal puriyum, marabugalai maanikkirom.</span></div>
       </div>
     </div>
   </div>
@@ -1349,8 +1422,8 @@ button { font-family: 'Poppins', sans-serif; }
     <div class="vendor-inner">
       <div class="reveal">
         <div class="section-tag" style="background:rgba(200,155,60,0.15);border-color:rgba(200,155,60,0.3);color:var(--gold-light);">For Vendors</div>
-        <h2>Are You a <span>Vendor?</span></h2>
-        <p>Get more leads, grow your business, and connect with clients across Tamil Nadu. Join hundreds of vendors already earning more with Namba Vizha.</p>
+        <h2><span class="lang-en">Are You a <span>Vendor?</span></span><span class="lang-ta">Neenga oru <span>Vendor-aa?</span></span></h2>
+        <p><span class="lang-en">Get more leads, grow your business, and connect with clients across Tamil Nadu. Join hundreds of vendors already earning more with Namba Vizha.</span><span class="lang-ta">Adhigama leads kedaikkum, ungal business valara, Tamil Nadu muzhuvadhukkum clients-koodu connect aagunga. Nootrukkum adhigamaana vendors ippave adhigama samba2kinnaar.</span></p>
         <div class="vendor-benefits">
           <div class="benefit-pill">📈 More Leads</div>
           <div class="benefit-pill">🌍 Wider Reach</div>
@@ -1360,7 +1433,7 @@ button { font-family: 'Poppins', sans-serif; }
       </div>
       <div class="reveal reveal-delay-2" style="flex-shrink:0">
         <button class="btn btn-primary" style="font-size:1rem;padding:18px 40px;" onclick="openModal('vendorModal')">
-          Join as Vendor →
+          <span class="lang-en">Join as Vendor →</span><span class="lang-ta">Vendor-aa Join pannunga →</span>
         </button>
       </div>
     </div>
@@ -1429,11 +1502,11 @@ button { font-family: 'Poppins', sans-serif; }
         <div class="kolam-dot" style="color:rgba(255,255,255,0.7)">✦</div>
         <div class="kolam-line" style="background:rgba(255,255,255,0.3)"></div>
       </div>
-      <h2>Start Planning Your<br>Event Today</h2>
-      <p>Join thousands of Tamil Nadu families who celebrate better with Namba Vizha.</p>
+      <h2><span class="lang-en">Start Planning Your<br>Event Today</span><span class="lang-ta">Innikey Thodangunga<br>Ungal Vizhavai Plan pannunga 🚀</span></h2>
+      <p><span class="lang-en">Join thousands of Tamil Nadu families who celebrate better with Namba Vizha.</span><span class="lang-ta">Aaraayiram Tamil Nadu kudumbangaloadu serunga — Namba Vizha-voodu better-aa celebrate pannunga.</span></p>
       <div class="final-cta-btns">
-        <button class="btn btn-white" onclick="openModal('clientModal')">✨ Get Started Free</button>
-        <a href="https://wa.me/918610406050?text=Hi%2C%20I%20want%20to%20know%20more%20about%20Namba%20Vizha" class="btn btn-ghost" target="_blank" rel="noopener">Contact Us on WhatsApp →</a>
+        <button class="btn btn-white" onclick="openModal('clientModal')"><span class="lang-en">✨ Get Started Free</span><span class="lang-ta">✨ Free-aa Thodangunga</span></button>
+        <a href="https://wa.me/918610406050?text=Hi%2C%20I%20want%20to%20know%20more%20about%20Namba%20Vizha" class="btn btn-ghost" target="_blank" rel="noopener"><span class="lang-en">Contact Us on WhatsApp →</span><span class="lang-ta">WhatsApp-la Pesungal →</span></a>
       </div>
     </div>
   </div>
@@ -1722,11 +1795,13 @@ function resetModal(type) {
     document.getElementById('clientSuccess').classList.remove('show');
     document.getElementById('clientForm').style.display = '';
     document.getElementById('clientForm').reset();
+    setButtonLoading('clientSubmitBtn', false);
     document.getElementById('clientSubmitBtn').querySelector('.btn-text').textContent = '🎉 Submit My Event Details';
   } else {
     document.getElementById('vendorSuccess').classList.remove('show');
     document.getElementById('vendorForm').style.display = '';
     document.getElementById('vendorForm').reset();
+    setButtonLoading('vendorSubmitBtn', false);
     document.getElementById('vendorSubmitBtn').querySelector('.btn-text').textContent = '🚀 Register My Business';
   }
 }
@@ -1759,11 +1834,20 @@ document.getElementById('clientForm').addEventListener('submit', async function(
   setButtonLoading('clientSubmitBtn', true, 'Submitting...');
   try {
     await submitToGoogleSheets(data);
+  } catch (err) {
+    // no-cors fetch may throw on network error — log but don't block UX
+    console.warn('[Namba Vizha] Fetch warning (data may still have been saved):', err);
+  }
 
-    // Build WhatsApp notification URL (opens for admin)
+  try {
+    // Build WhatsApp notification URL
     const waMsg = `🎉 *New Client Lead — Namba Vizha*\n\n👤 Name: ${data.name}\n📱 Phone: ${data.phone}\n🎊 Event: ${data.event}\n📅 Date: ${data.date}\n📍 City: ${data.city}\n💰 Budget: ${data.budget}\n🕐 Time: ${data.timestamp}`;
     const waURL = buildWhatsAppURL(waMsg);
     document.getElementById('clientWhatsappLink').href = waURL;
+
+    // Reset button BEFORE showing success (so resetModal works cleanly)
+    setButtonLoading('clientSubmitBtn', false);
+    document.getElementById('clientSubmitBtn').querySelector('.btn-text').textContent = '🎉 Submit My Event Details';
 
     // Show success state
     this.style.display = 'none';
@@ -1795,6 +1879,9 @@ document.getElementById('vendorForm').addEventListener('submit', async function(
     city: document.getElementById('v_city').value,
     experience: document.getElementById('v_experience').value,
     priceRange: document.getElementById('v_priceRange').value,
+    instagram: document.getElementById('v_instagram').value.trim(),
+    businessType: document.getElementById('v_type').value,
+    serviceArea: document.getElementById('v_area').value,
     timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
   };
 
@@ -1808,11 +1895,19 @@ document.getElementById('vendorForm').addEventListener('submit', async function(
   setButtonLoading('vendorSubmitBtn', true, 'Submitting...');
   try {
     await submitToGoogleSheets(data);
+  } catch (err) {
+    console.warn('[Namba Vizha] Fetch warning (data may still have been saved):', err);
+  }
 
+  try {
     // Build WhatsApp notification URL
-    const waMsg = `🏪 *New Vendor Registration — Namba Vizha*\n\n🏢 Business: ${data.business}\n👤 Owner: ${data.owner}\n📱 Phone: ${data.phone}\n💬 WhatsApp: ${data.whatsapp}\n🎯 Category: ${data.category}\n📍 City: ${data.city}\n📅 Experience: ${data.experience}\n💰 Price Range: ${data.priceRange}\n🕐 Time: ${data.timestamp}`;
+    const waMsg = `🏪 *New Vendor Registration — Namba Vizha*\n\n🏢 Business: ${data.business}\n👤 Owner: ${data.owner}\n📱 Phone: ${data.phone}\n💬 WhatsApp: ${data.whatsapp}\n🎯 Category: ${data.category}\n🏷️ Type: ${data.businessType || 'Not specified'}\n📸 Instagram: ${data.instagram || 'Not provided'}\n🗺️ Service Area: ${data.serviceArea || 'Not specified'}\n📍 City: ${data.city}\n📅 Experience: ${data.experience}\n💰 Price Range: ${data.priceRange}\n🕐 Time: ${data.timestamp}`;
     const waURL = buildWhatsAppURL(waMsg);
     document.getElementById('vendorWhatsappLink').href = waURL;
+
+    // Reset button BEFORE showing success
+    setButtonLoading('vendorSubmitBtn', false);
+    document.getElementById('vendorSubmitBtn').querySelector('.btn-text').textContent = '🚀 Register My Business';
 
     // Show success state
     this.style.display = 'none';
@@ -1826,6 +1921,38 @@ document.getElementById('vendorForm').addEventListener('submit', async function(
     document.getElementById('vendorSubmitBtn').querySelector('.btn-text').textContent = '🚀 Register My Business';
   }
 });
+
+
+/* ─────────────────────────────────────────
+   LANGUAGE TOGGLE SYSTEM
+   ─────────────────────────────────────────
+   Tamil-first: defaults to English, user can
+   switch. Preference saved in localStorage.
+   ───────────────────────────────────────── */
+function setLanguage(lang) {
+  const isTamil = lang === 'ta';
+  document.body.classList.toggle('tamil', isTamil);
+
+  // Update button active states
+  const btnEn = document.getElementById('btn-en');
+  const btnTa = document.getElementById('btn-ta');
+  if (btnEn && btnTa) {
+    btnEn.classList.toggle('active', !isTamil);
+    btnTa.classList.toggle('active', isTamil);
+    btnEn.setAttribute('aria-pressed', String(!isTamil));
+    btnTa.setAttribute('aria-pressed', String(isTamil));
+  }
+
+  // Save preference
+  try { localStorage.setItem('nv_lang', lang); } catch(e) {}
+}
+
+// Init on load — default English, restore saved pref
+(function() {
+  let saved = 'en';
+  try { saved = localStorage.getItem('nv_lang') || 'en'; } catch(e) {}
+  setLanguage(saved);
+})();
 
 /* ─────────────────────────────────────────
    SCROLL REVEAL
